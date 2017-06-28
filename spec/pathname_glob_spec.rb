@@ -113,4 +113,20 @@ describe "Pathname#glob" do
       ])
     end
   end
+
+  describe "block" do
+    let(:base_path) { "foo" }
+    let(:args) { ["*.txt"] }
+    it do
+      yields = []
+      result = (tmpdir+base_path).glob(*args){|*x|
+        yields << x
+      }
+      expect(result).to eq(nil)
+      expect(yields).to eq([
+        [tmpdir + "foo/1.txt"],
+        [tmpdir + "foo/2.txt"],
+      ])
+    end
+  end
 end
