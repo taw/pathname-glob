@@ -6,6 +6,9 @@ describe "Pathname#glob" do
     "bar/4.html",
     "bar/abc/5.html",
     "bar/6.gif",
+    "lol/[]{}/?*?*?*?!\\\\?\\/lol/1.txt",
+    "lol/[]{}/?*?*?*?!\\\\?\\/lol/2.gif",
+    "lol/[]{}/?*?*?*?!\\\\?\\/lol/3.txt",
   ]}
   let(:tmpdir) {
     Pathname(@dir)
@@ -47,13 +50,66 @@ describe "Pathname#glob" do
     end
   end
 
-  describe "basic exaples" do
+  describe do
     let(:base_path) { "bar" }
     let(:args) { ["**/*.html"] }
     it do
       expect(result).to eq([
         Pathname("bar/4.html"),
         Pathname("bar/abc/5.html"),
+      ])
+    end
+  end
+
+  describe "array of arguments" do
+    let(:base_path) { "foo" }
+    let(:args) { [["?.html", "?.txt"]] }
+    it do
+      expect(result).to eq([
+        Pathname("foo/3.html"),
+        Pathname("foo/1.txt"),
+        Pathname("foo/2.txt"),
+      ])
+    end
+  end
+
+  describe "options" do
+    let(:base_path) { "foo" }
+    let(:args) { ["*", 0] }
+    it do
+      expect(result).to eq([
+        Pathname("foo/1.txt"),
+        Pathname("foo/2.txt"),
+        Pathname("foo/3.html"),
+      ])
+    end
+  end
+
+  describe "options" do
+    let(:base_path) { "foo" }
+    let(:args) { ["*", File::FNM_DOTMATCH] }
+    it do
+      expect(result).to eq([
+        Pathname("foo"), # .
+        Pathname("."), # ..
+        Pathname("foo/1.txt"),
+        Pathname("foo/2.txt"),
+        Pathname("foo/3.html"),
+      ])
+    end
+  end
+
+  # Special characters as per dir.c in ruby sources:
+  # hard special (unescapable): / \0
+  # unix: { } \ [ ] * ?
+  # There's also something about Win32 and . and ~ that I don't really get
+  describe "escaping" do
+    let(:base_path) { "lol/[]{}/?*?*?*?!\\\\?\\/lol" }
+    let(:args) { ["*.txt"] }
+    it do
+      expect(result).to eq([
+        Pathname("lol/[]{}/?*?*?*?!\\\\?\\/lol/1.txt"),
+        Pathname("lol/[]{}/?*?*?*?!\\\\?\\/lol/3.txt",),
       ])
     end
   end
