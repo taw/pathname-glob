@@ -33,7 +33,7 @@ describe "Pathname#glob" do
     let(:base_path) { "foo" }
     let(:args) { ["*.txt"] }
     it do
-      expect(result).to eq([
+      expect(result).to match_array([
         Pathname("foo/1.txt"),
         Pathname("foo/2.txt"),
       ])
@@ -54,7 +54,7 @@ describe "Pathname#glob" do
     let(:base_path) { "bar" }
     let(:args) { ["**/*.html"] }
     it do
-      expect(result).to eq([
+      expect(result).to match_array([
         Pathname("bar/4.html"),
         Pathname("bar/abc/5.html"),
       ])
@@ -65,7 +65,7 @@ describe "Pathname#glob" do
     let(:base_path) { "foo" }
     let(:args) { [["?.html", "?.txt"]] }
     it do
-      expect(result).to eq([
+      expect(result).to match_array([
         Pathname("foo/3.html"),
         Pathname("foo/1.txt"),
         Pathname("foo/2.txt"),
@@ -77,7 +77,7 @@ describe "Pathname#glob" do
     let(:base_path) { "foo" }
     let(:args) { ["*", 0] }
     it do
-      expect(result).to eq([
+      expect(result).to match_array([
         Pathname("foo/1.txt"),
         Pathname("foo/2.txt"),
         Pathname("foo/3.html"),
@@ -89,7 +89,7 @@ describe "Pathname#glob" do
     let(:base_path) { "foo" }
     let(:args) { ["*", File::FNM_DOTMATCH] }
     it do
-      expect(result).to eq([
+      expect(result).to match_array([
         Pathname("foo"), # .
         Pathname("."), # ..
         Pathname("foo/1.txt"),
@@ -107,7 +107,7 @@ describe "Pathname#glob" do
     let(:base_path) { "lol/[]{}/?*?*?*?!\\\\?\\/lol" }
     let(:args) { ["*.txt"] }
     it do
-      expect(result).to eq([
+      expect(result).to match_array([
         Pathname("lol/[]{}/?*?*?*?!\\\\?\\/lol/1.txt"),
         Pathname("lol/[]{}/?*?*?*?!\\\\?\\/lol/3.txt",),
       ])
@@ -123,7 +123,7 @@ describe "Pathname#glob" do
         yields << x
       }
       expect(result).to eq(nil)
-      expect(yields).to eq([
+      expect(yields).to match_array([
         [tmpdir + "foo/1.txt"],
         [tmpdir + "foo/2.txt"],
       ])
