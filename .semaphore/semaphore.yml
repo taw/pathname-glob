@@ -1,0 +1,16 @@
+version: v1.0
+name: Ruby
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+  - name: bundle exec rspec
+    task:
+      jobs:
+        - name: bundle install
+          commands:
+            - checkout
+            - 'sem-version ruby 2.4.10 # ruby 2.5 added Pathname#glob method, so this gem is no longer needed in 2.5+'
+            - bundle install --path vendor/bundle
+            - bundle exec rspec
