@@ -1,3 +1,7 @@
+This gem is no longer needed in Ruby 2.5+, as Ruby already implements this method.
+
+## Description
+
 Implements a much needed `Pathname#glob` method.
 
 To install run `gem install pathname-glob`, and then `require "pathname-glob"` in your code.
@@ -11,7 +15,7 @@ Pathname("foo").glob("*.txt")
 Pathname("foo").glob("*.txt", File::FNM_DOTMATCH)
 Pathname("foo").glob(["*.txt", "*.html"])
 Pathname("foo").glob("*.txt") do |path|
-  # yields Pathname objects  
+  # yields Pathname objects
 end # returns nil
 ```
 
